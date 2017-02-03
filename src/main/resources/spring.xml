@@ -1,0 +1,53 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xmlns:context="http://www.springframework.org/schema/context"
+
+
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-4.2.xsd
+
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="pl.vlados.spring.training"/>
+
+
+    <bean class="pl.vlados.spring.training.entity.Client" id="client" c:name="Vlados" c:strategy-ref="strategyNotifyA" />
+    <bean class="pl.vlados.spring.training.entity.Client" id="client1" c:name="Babos" c:strategy-ref="strategyNotifyB" />
+    <bean class="pl.vlados.spring.training.entity.Client" id="client2" c:name="Dmitry" c:strategy-ref="strategyNotifyA"/>
+
+
+
+
+    <bean id="main" class="pl.vlados.spring.training.Main" >
+        <constructor-arg>
+            <list>
+                <ref bean="client"/>
+                <ref bean="client1"/>
+                <ref bean="client2"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="factory" class="pl.vlados.spring.training.entity.Factory"/>
+
+    <bean id="factoryBuilder" abstract="true" class="pl.vlados.spring.training.builder.FactoryBuilder">
+        <constructor-arg ref="factory"/>
+    </bean>
+
+    <bean id="autoFactoryBuilder" parent="factoryBuilder" class="pl.vlados.spring.training.builder.AutoFactoryBuilder"/>
+
+    <bean id="directorFactory" class="pl.vlados.spring.training.starter_builder.DirectorFactory" p:factoryBuilder-ref="autoFactoryBuilder"/>
+
+    <bean id="car" class="pl.vlados.spring.training.entity.Car"/>
+
+</beans>
